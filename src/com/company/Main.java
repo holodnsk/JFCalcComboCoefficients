@@ -12,7 +12,9 @@ public class Main {
         reader = new BufferedReader(new FileReader(
                 "jackfruit_history_202209051511.csv"));
         String line = reader.readLine();
+        int count = 0;
         while (line != null) {
+            line  = reader.readLine();
             process(line);
         }
         reader.close();
