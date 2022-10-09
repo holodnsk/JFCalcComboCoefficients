@@ -30,6 +30,7 @@ public class Main {
         System.out.println(line);
         try {
             if (line.contains("PokerStars Hand ")) {
+                // todo calc
                 hand = new Hand();
             }
 
