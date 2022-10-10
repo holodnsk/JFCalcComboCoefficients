@@ -2,7 +2,11 @@ package com.company;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.HashMap;
+import java.util.Map;
+
 import albertahandevaluator.AlbertaHand;
+import albertahandevaluator.AlbertaHandEvaluator;
 
 
 public class Main {
@@ -30,7 +34,11 @@ public class Main {
         System.out.println(line);
         try {
             if (line.contains("PokerStars Hand ")) {
-                // todo calc
+                if (hand != null) {
+                    Map<String, Boolean> headLineResult = hand.calcHeadLineResult();
+                    Map<String, Boolean> middleLineResult = hand.calcMiddleHeadLineResult();
+                    Map<String, Boolean> tailLineResult = hand.calcTailLineResult();
+                }
                 hand = new Hand();
             }
 
@@ -147,4 +155,44 @@ class Hand {
             opponentName=seat1Name;
 
     }
+
+    public Map<String, Boolean> calcHeadLineResult() {
+        Map<String, Boolean> result = getLineResult(heroHeadLine, opponentHeadLine);
+        return result;
+    }
+
+    public Map<String, Boolean> calcMiddleHeadLineResult() {
+        Map<String, Boolean> result = getLineResult(heroMiddleLine, opponentMiddleLine);
+        return result;
+    }
+
+    public Map<String, Boolean> calcTailLineResult() {
+        Map<String, Boolean> result = getLineResult(heroTailLine, opponentTailLine);
+        return result;
+    }
+
+    private Map<String, Boolean> getLineResult(String heroHeadLine, String opponentHeadLine) {
+        boolean heroWinHeadLine = isHeroWinLine(heroHeadLine, opponentHeadLine);
+        String heroHeadLineComboName = getLineComboName(heroHeadLine);
+
+        Map<String, Boolean> result = new HashMap<>();
+        result.put(heroHeadLineComboName, heroWinHeadLine);
+        return result;
+    }
+
+    private String getLineComboName(String line) {
+        return AlbertaHandEvaluator.nameHand(new AlbertaHand(line + " " + river));
+    }
+
+    private boolean isHeroWinLine(String heroLine, String opponentLine) {
+        AlbertaHand heroAlbertaHand = new AlbertaHand(heroLine + " " + river);
+        int heroHeadHandPower = AlbertaHandEvaluator.rankHand(heroAlbertaHand);
+
+        AlbertaHand opponentAlbertaHand = new AlbertaHand(opponentLine + " " + river);
+        int opponentHeadHandPower = AlbertaHandEvaluator.rankHand(opponentAlbertaHand);
+
+        return heroHeadHandPower>opponentHeadHandPower;
+    }
+
+
 }
