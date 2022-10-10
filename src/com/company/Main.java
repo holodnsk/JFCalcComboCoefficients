@@ -35,11 +35,15 @@ public class Main {
             }
 
             if (line.contains("Seat 1: ")) {
-                hand.fillHeroName(line);
+                hand.fillSeat1Name(line);
             }
 
             if (line.contains("Seat 2: ")) {
-                hand.fillOpponentName(line);
+                hand.fillSeat2Name(line);
+            }
+
+            if (line.contains("Dealt to ")) {
+                hand.setHeroAndApponentNames(line);
             }
 
             if (line.contains(hand.heroName + ": shows head")) {
@@ -71,9 +75,13 @@ public class Main {
             System.out.println("exception line:"+line);
         }
     }
+
+
 }
 
 class Hand {
+    String seat1Name;
+    String seat2Name;
     String heroName;
     String heroHeadLine;
     String heroMiddleLine;
@@ -86,11 +94,11 @@ class Hand {
     String winner;
     String winAmmount;
 
-    public void fillHeroName(String line) {
-        heroName = getPlayerName(line);
+    public void fillSeat1Name(String line) {
+        seat1Name = getPlayerName(line);
     }
-    public void fillOpponentName(String line) {
-        opponentName = getPlayerName(line);
+    public void fillSeat2Name(String line) {
+        seat2Name = getPlayerName(line);
     }
 
     public void fillHeroHeadLine(String line) {
@@ -128,5 +136,15 @@ class Hand {
 
     public void WinAmmount(String line) {
         winAmmount = line.split(" ")[2].replace("$","").replace(".00","");
+    }
+
+    public void setHeroAndApponentNames(String line) {
+        heroName = line.split(" ")[2];
+        if (seat1Name.equals(heroName))
+            opponentName=seat2Name;
+
+        if (seat2Name.equals(heroName))
+            opponentName=seat1Name;
+
     }
 }
